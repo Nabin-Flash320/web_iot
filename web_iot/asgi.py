@@ -16,8 +16,5 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web_iot.settings")
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application,
-    "websocket":URLRouter([
-        
-    ])
 })
 
