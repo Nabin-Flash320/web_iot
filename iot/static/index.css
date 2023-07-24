@@ -1,0 +1,208 @@
+body {
+    font-family: 'Courier New';
+    padding: 0%;
+    background-color: aliceblue;
+}
+
+.div-main-container {
+    font-family: inherit;
+    padding: 0%;
+    height: 97vh;
+}
+
+.div-iot-item-container {
+    position: relative;
+    top: 15%;
+    left: 25%;
+    border: 1px solid black;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 100px 100px 100px;
+    background-color: #fff;
+    color: #444;
+    width: 50%;
+    height: 55vh;
+    padding: 10px;
+}
+
+.div-device-container {
+    background-color: #DBC5F1;
+    color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    font-size: 150%;
+}
+
+.div-led-container {
+    grid-column: 1 / span 2;
+    position: inherit;
+    width: 25rem;
+    height: 9rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.div-led-inner-container {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem;
+}
+
+.img-led-on-off-elem {
+    position: relative;
+}
+
+.div-slide-container {
+    padding: 0.2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.span-slider-display {
+    font-weight: bolder;
+    position: relative;
+    left: 0.2rem;
+    color: #000000;
+}
+
+.div-led-name {
+    padding-left: 0.2rem;
+}
+
+.div-led-name {
+    color: #000000;
+    font-weight: bolder;
+}
+
+.input-range-slider {
+    width: 100%;
+    cursor: pointer;
+}
+
+.div-lux-container {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    position: inherit;
+    left: 14rem;
+    width: 12rem;
+}
+
+.div-tmp-container {
+    grid-column: 1;
+    grid-row: 2;
+    position: inherit;
+    width: 11rem;
+    height: 7.5rem;
+}
+
+.div-hmd-container {
+    grid-column: 2;
+    grid-row: 2;
+    position: relative;
+    left: 7rem;
+    width: 11rem;
+    height: 7.5rem;
+}
+
+.label-led-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    top: 0.4rem;
+    left: 16rem;
+}
+
+.label-led-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.span-switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.span-switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.span-switch-slider {
+    background-color: #2196F3;
+}
+
+input:focus+.span-switch-slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.span-switch-slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.span-switch-slider.round {
+    border-radius: 34px;
+}
+
+.span-switch-slider.round:before {
+    border-radius: 50%;
+}
+
+.div-sensor-container {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+
+.div-name-unit-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+.span-lux-value {
+    font-weight: bold;
+    border: 1px s/olid black;
+}
+
+
+.span-lux-unit {
+    font-size: small;
+    font-weight: bolder;
+    margin-left: 5px;
+    position: relative;
+    left: -0.2rem;
+    top: 0.1rem;
+}
+
+.div-name-container {
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bolder;
+    color: black;
+}

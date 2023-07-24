@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <title>IoT</title>
+</head>
+
+<body>
+    <div class="div-main-container">
+        <div class="div-iot-item-container">
+            <div class="div-device-container div-led-container">
+                <div class="div-led-inner-container">
+                    <img width="48" height="48" class="img-led-on-off-elem" id="img-led-on-off"
+                        src="https://img.icons8.com/pulsar-line/48/light.png" alt="LED-off" />
+                    <label class="label-led-switch">
+                        <input type="checkbox" value="false" id="input-led-switch" onclick="btn_clicked()">
+                        <span class="span-switch-slider round"></span>
+                    </label>
+                </div>
+                <div class="div-slide-container">
+                    <span class="span-slider-display" id="span-slider-dislpay-id">0%</span>
+                    <input type="range" min="0" max="255" value="0" class="input-range-slider"
+                        id="input-range-slider-id" oninput="led_slider_changed()">
+                </div>
+                <div class="div-led-name">
+                    <span class="div-led-name">LED</span>
+                </div>
+            </div>
+            <div class="div-device-container div-lux-container">
+                <div class="div-sensor-container">
+                    <img width="64" height="64" class="img-lux-sensor" src="https://img.icons8.com/arcade/64/summer.png"
+                        alt="summer" />
+                    <div class="div-name-unit-container">
+                        <span class="span-lux-value">1000</span>
+                        <span class="span-lux-unit">LUX</span>
+                    </div>
+                </div>
+                <div class="div-name-container">
+                    <span class="span-name">Lux Sensor</span>
+                </div>
+            </div>
+            <div class="div-device-container div-tmp-container">
+                <div class="div-sensor-container">
+                    <img width="64" height="64"
+                        src="https://img.icons8.com/external-mixed-line-solid-yogi-aprelliyanto/64/external-temperature-smart-home-device-mixed-line-solid-yogi-aprelliyanto.png"
+                        alt="external-temperature-smart-home-device-mixed-line-solid-yogi-aprelliyanto" />
+                    <div class="div-name-unit-container">
+                        <span class="span-lux-value">25</span>
+                        <span class="span-lux-unit">&#x2103;</span>
+                    </div>
+                </div>
+                <div class="div-name-container">
+                    <span class="span-name">Temperature</span>
+                </div>
+            </div>
+            <div class=" div-device-container div-hmd-container">
+                <div class="div-sensor-container">
+                    <img width="64" height="64"
+                        src="https://img.icons8.com/external-basic-line-gradient-yogi-aprelliyanto/64/external-humidity-weather-basic-line-gradient-yogi-aprelliyanto.png"
+                        alt="external-humidity-weather-basic-line-gradient-yogi-aprelliyanto" />
+                    <div class="div-name-unit-container">
+                        <span class="span-lux-value">60</span>
+                        <span class="span-lux-unit">%</span>
+                    </div>
+                </div>
+                <div class="div-name-container">
+                    <span class="span-name">Humidity</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    ws = new WebSocket("ws://" + window.location.host + "/iot")
+    ws.onmessage = function (e) { console.log(e.data); };
+    
+
+    function led_slider_changed() {
+        var led_brightness_slider = document.getElementById("input-range-slider-id");
+        var led_brightness_slider_display = document.getElementById("span-slider-dislpay-id");
+
+        console.log(led_brightness_slider.value);
+        led_brightness_slider_display.innerHTML = Math.ceil((led_brightness_slider.value / 255) * 100) + '%';
+    }
+
+    function btn_clicked() {
+        var LED_off_url = "https://img.icons8.com/pulsar-line/48/light.png";
+        var LED_on_url = "https://img.icons8.com/pulsar-color/48/light.png";
+        var LED_switch = document.getElementById("input-led-switch");
+        var LED_img = document.getElementById("img-led-on-off");
+
+        if ("false" == LED_switch.value) {
+            LED_switch.value = "true";
+            LED_img.src = LED_on_url;
+        }
+        else {
+            LED_switch.value = "false";
+            LED_img.src = LED_off_url;
+        }
+    }
+</script>
+
+</html>

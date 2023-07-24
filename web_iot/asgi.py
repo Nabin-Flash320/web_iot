@@ -11,10 +11,15 @@ import os
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
+from django.urls import path
+from iot.consumers import IOTConsumerClass
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web_iot.settings")
 
 application = ProtocolTypeRouter({
-    "http": get_asgi_application,
+    "http": get_asgi_application(),
+    "websocket": URLRouter([
+        path("iot", IOTConsumerClass.as_asgi())
+    ])
 })
 

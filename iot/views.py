@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from . import views
 
 
 # Create your views here.
 def index(request):
-    return JsonResponse({"Name": "Nabin Dangi", "Class": "BEX"})
+    return render(request=request, template_name="index.html")
