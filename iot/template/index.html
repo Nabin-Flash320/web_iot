@@ -86,6 +86,10 @@
 
         console.log(led_brightness_slider.value);
         led_brightness_slider_display.innerHTML = Math.ceil((led_brightness_slider.value / 255) * 100) + '%';
+        ws.send(JSON.stringify({
+            sensor_name:"LED Brightness",
+            data:led_brightness_slider.value,
+        }))
     }
 
     function btn_clicked() {
@@ -102,6 +106,10 @@
             LED_switch.value = "false";
             LED_img.src = LED_off_url;
         }
+        ws.send(JSON.stringify({
+            sensor_name: "LED_OnOff",
+            data: LED_switch.value,
+        }))
     }
 </script>
 
