@@ -76,20 +76,27 @@
 </body>
 <script>
 
-    ws = new WebSocket("ws://" + window.location.host + "/iot")
+    ws = new WebSocket("ws://" + window.location.host + "/iot");
     ws.onmessage = function (e) { console.log(e.data); };
-    
+    ws.onopen = ()=>
+    {
+        ws.send(JSON.stringify({
+            from:"UI"
+        }))
+    }
 
     function led_slider_changed() {
         var led_brightness_slider = document.getElementById("input-range-slider-id");
         var led_brightness_slider_display = document.getElementById("span-slider-dislpay-id");
 
+        var json_data = {
+            sensor_name: "LED Brightness"
+        }
+
         console.log(led_brightness_slider.value);
         led_brightness_slider_display.innerHTML = Math.ceil((led_brightness_slider.value / 255) * 100) + '%';
-        ws.send(JSON.stringify({
-            sensor_name:"LED Brightness",
-            data:led_brightness_slider.value,
-        }))
+        json_data.data = led_brightness_slider.value
+        ws.send(JSON.stringify(json_data))
     }
 
     function btn_clicked() {
@@ -97,6 +104,10 @@
         var LED_on_url = "https://img.icons8.com/pulsar-color/48/light.png";
         var LED_switch = document.getElementById("input-led-switch");
         var LED_img = document.getElementById("img-led-on-off");
+
+        var json_data = {
+            sensor_name: "LED_OnOff",
+        }
 
         if ("false" == LED_switch.value) {
             LED_switch.value = "true";
@@ -106,10 +117,9 @@
             LED_switch.value = "false";
             LED_img.src = LED_off_url;
         }
-        ws.send(JSON.stringify({
-            sensor_name: "LED_OnOff",
-            data: LED_switch.value,
-        }))
+        json_data.data = LED_switch.value;
+        console.log(json_data);
+        ws.send(JSON.stringify(json_data));
     }
 </script>
 
