@@ -8,7 +8,7 @@ class IOTConsumerClass(AsyncJsonWebsocketConsumer):
     device_connection_list = list()
     async def connect(self):
         await self.accept() # Configuyre django channels' channel layer to get channel_name attrubute.
-print("UI channel {0} disconnected.".format(self.channel_name))        print("Channel {0} connected.".format(self.channel_name))
+        print("Channel {0} connected.".format(self.channel_name))
     
     async def disconnect(self, code):
         if self.channel_name in IOTConsumerClass.ui_connection_list:
