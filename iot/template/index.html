@@ -21,13 +21,13 @@
                         <span class="span-switch-slider round"></span>
                     </label>
                 </div>
-                <div class="div-slide-container">
+                <!-- <div class="div-slide-container">
                     <span class="span-slider-display" id="span-slider-dislpay-id">0%</span>
                     <input type="range" min="0" max="255" value="0" class="input-range-slider"
                         id="input-range-slider-id" oninput="led_slider_changed()">
-                </div>
+                </div> -->
                 <div class="div-led-name">
-                    <span class="div-led-name">LED</span>
+                    <span class="div-led-name span-name">LED</span>
                 </div>
             </div>
             <div class="div-device-container div-lux-container">
@@ -49,7 +49,7 @@
                         src="https://img.icons8.com/external-mixed-line-solid-yogi-aprelliyanto/64/external-temperature-smart-home-device-mixed-line-solid-yogi-aprelliyanto.png"
                         alt="external-temperature-smart-home-device-mixed-line-solid-yogi-aprelliyanto" />
                     <div class="div-name-unit-container">
-                        <span class="span-lux-value">25</span>
+                        <span class="span-lux-value" id="span-temperature-value">25</span>
                         <span class="span-lux-unit">&#x2103;</span>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                         src="https://img.icons8.com/external-basic-line-gradient-yogi-aprelliyanto/64/external-humidity-weather-basic-line-gradient-yogi-aprelliyanto.png"
                         alt="external-humidity-weather-basic-line-gradient-yogi-aprelliyanto" />
                     <div class="div-name-unit-container">
-                        <span class="span-lux-value">60</span>
+                        <span class="span-lux-value" id="span-humidity-value">60</span>
                         <span class="span-lux-unit">%</span>
                     </div>
                 </div>
@@ -76,13 +76,31 @@
 </body>
 <script>
 
-    ws = new WebSocket("ws://" + window.location.host + "/iot");
-    ws.onmessage = function (e) { console.log(e.data); };
-    ws.onopen = ()=>
+    ws = new WebSocket("ws://" + window.location.host + "/iot/ui");
+    ws.onmessage = function (e) { 
+        console.log("Received from device.");
+        console.log(e.data); 
+        var data = JSON.parse(e.data)
+        if("Temperature" == data["sensor_name"])
+        {
+            update_temperature(data["data"]);
+        }
+        if("Humidity" == data["sensor_name"])
+        {
+            update_humidity(data["data"]);
+        }
+    };
+
+    function update_temperature(value)
     {
-        ws.send(JSON.stringify({
-            from:"UI"
-        }))
+        var temperature_span = document.getElementById("span-temperature-value");
+        temperature_span.innerText = value;
+    }
+
+    function update_humidity(value)
+    {
+        var humidity_span = document.getElementById("span-humidity-value");
+        humidity_span.innerText = value;
     }
 
     function led_slider_changed() {
@@ -117,7 +135,7 @@
             LED_switch.value = "false";
             LED_img.src = LED_off_url;
         }
-        json_data.data = LED_switch.value;
+        json_data.data = ("true" == LED_switch.value) ? true : false;
         console.log(json_data);
         ws.send(JSON.stringify(json_data));
     }
