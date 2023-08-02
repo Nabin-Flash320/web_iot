@@ -89,6 +89,10 @@
         {
             update_humidity(data["data"]);
         }
+        if("LUX_sensor" == data["sensor_name"])
+        {
+            console.log(e.data);
+        }
     };
 
     function update_temperature(value)

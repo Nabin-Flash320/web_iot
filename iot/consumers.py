@@ -1,6 +1,9 @@
 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 import json
+import paho.mqtt.client as mqtt
 
 ui_connection_list = list()
 device_connection_list = list()
@@ -25,7 +28,14 @@ class IOTUIConsumerClass(AsyncJsonWebsocketConsumer):
             })
     
     async def send_to_ui(self, event):
-        await self.send(text_data=event['data'])
+        try:
+            await self.send(text_data=event['data'])
+        except Exception as e:
+            print(e)
+    
+    async def handle_mqtt_message(self, event):
+        data = event['data']
+        print(data)
 
 
 class IOTDevicesConsumerClass(AsyncJsonWebsocketConsumer):
@@ -52,3 +62,33 @@ class IOTDevicesConsumerClass(AsyncJsonWebsocketConsumer):
     async def send_to_device(self, event):
         await self.send(text_data=event['data'])
 
+
+class MQTTClient(mqtt.Client):
+    def __init__(self, broker="broker.emqx.io", port=1883, keepalive=60):
+        super().__init__()
+        self.on_connect = self.on_connect
+        self.on_message = self.on_message 
+        self.connect(host=broker, port=port, keepalive=keepalive)
+        self.received_data = dict()
+    
+    def on_connect(self, client, user_data, flags, rc):
+        print("Connected with the result code of {0}".format(rc))
+        client.subscribe("iot/test/topic_1")
+    
+    def on_message(self, client, user_data, message):
+        self.received_data['topic'] = message.topic
+        self.received_data['payload'] = message.payload.decode("utf-8")
+        print("{0}".format(self.received_data))
+        channel_layer = get_channel_layer()
+        for ui in ui_connection_list:
+            print(ui)
+            try:
+                async_to_sync(channel_layer.send(ui, {
+                'type': 'send_to_ui',
+                'data': self.received_data['payload'],
+                }))
+            except Exception as e:
+                print(e)
+    
+client = MQTTClient("broker.emqx.io", 1883, 60)
+client.loop_start()
