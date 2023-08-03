@@ -35,7 +35,7 @@
                     <img width="64" height="64" class="img-lux-sensor" src="https://img.icons8.com/arcade/64/summer.png"
                         alt="summer" />
                     <div class="div-name-unit-container">
-                        <span class="span-lux-value">1000</span>
+                        <span class="span-lux-value" id="span-lux-value-id">1000</span>
                         <span class="span-lux-unit">LUX</span>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
         }
         if("LUX_sensor" == data["sensor_name"])
         {
-            console.log(e.data);
+            update_lux(data["data"])
         }
     };
 
@@ -105,6 +105,12 @@
     {
         var humidity_span = document.getElementById("span-humidity-value");
         humidity_span.innerText = value;
+    }
+
+    function update_lux(value)
+    {
+        var lux_span = document.getElementById("span-lux-value-id");
+        lux_span.innerText = value
     }
 
     function led_slider_changed() {

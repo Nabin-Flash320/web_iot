@@ -1,7 +1,7 @@
 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+import asyncio
 import json
 import paho.mqtt.client as mqtt
 
@@ -28,15 +28,21 @@ class IOTUIConsumerClass(AsyncJsonWebsocketConsumer):
             })
     
     async def send_to_ui(self, event):
+        print(event['data'])
         try:
             await self.send(text_data=event['data'])
         except Exception as e:
             print(e)
     
-    async def handle_mqtt_message(self, event):
-        data = event['data']
-        print(data)
-
+    @classmethod
+    def handle_MQTT_message(cls, data):
+        channel_layer = get_channel_layer()
+        for ui in ui_connection_list:
+            asyncio.run(channel_layer.send(ui, {
+                'type':'send_to_ui',
+                'data':data
+            }))
+        
 
 class IOTDevicesConsumerClass(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -63,7 +69,7 @@ class IOTDevicesConsumerClass(AsyncJsonWebsocketConsumer):
         await self.send(text_data=event['data'])
 
 
-class MQTTClient(mqtt.Client):
+class MQTTClient(mqtt.Client, AsyncJsonWebsocketConsumer):
     def __init__(self, broker="broker.emqx.io", port=1883, keepalive=60):
         super().__init__()
         self.on_connect = self.on_connect
@@ -78,17 +84,9 @@ class MQTTClient(mqtt.Client):
     def on_message(self, client, user_data, message):
         self.received_data['topic'] = message.topic
         self.received_data['payload'] = message.payload.decode("utf-8")
-        print("{0}".format(self.received_data))
-        channel_layer = get_channel_layer()
-        for ui in ui_connection_list:
-            print(ui)
-            try:
-                async_to_sync(channel_layer.send(ui, {
-                'type': 'send_to_ui',
-                'data': self.received_data['payload'],
-                }))
-            except Exception as e:
-                print(e)
+        # print("{0}".format(self.received_data))
+        IOTUIConsumerClass.handle_MQTT_message(data=self.received_data['payload'])
+        
     
 client = MQTTClient("broker.emqx.io", 1883, 60)
 client.loop_start()
